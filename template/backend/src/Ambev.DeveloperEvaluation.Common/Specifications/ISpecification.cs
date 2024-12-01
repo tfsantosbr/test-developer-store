@@ -1,4 +1,4 @@
-﻿namespace Ambev.DeveloperEvaluation.Domain.Specifications;
+﻿namespace Ambev.DeveloperEvaluation.Common.Specifications;
 
 public interface ISpecification<T>
 {
