@@ -7,13 +7,13 @@ public record Result
     }
 
     protected Result(Error notification) =>
-        Notifications = [notification];
+        Errors = [notification];
 
     protected Result(Error[] notifications) =>
-        Notifications = notifications;
+        Errors = notifications;
 
-    public Error[] Notifications { get; } = [];
-    public bool IsSuccess => Notifications.Length == 0;
+    public Error[] Errors { get; } = [];
+    public bool IsSuccess => Errors.Length == 0;
     public bool IsFailure => !IsSuccess;
 
     public static ErrorResult Error(Error notification) => new(notification);

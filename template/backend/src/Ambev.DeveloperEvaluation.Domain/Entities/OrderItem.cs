@@ -2,10 +2,11 @@
 
 public sealed class OrderItem
 {
-    public OrderItem(Guid orderId, Guid productId, int quantity)
+    public OrderItem(Guid orderId, Product product, int quantity)
     {
         OrderId = orderId;
-        ProductId = productId;
+        ProductId = product.Id;
+        UnitPrice = product.Price;
         Quantity = quantity;
     }
 
@@ -16,6 +17,6 @@ public sealed class OrderItem
     public Guid OrderId { get; private set; }
     public Guid ProductId { get; private set; }
     public int Quantity { get; private set; }
-    public Product Product { get; private set; } = default!;
-    public decimal TotalPrice => Product.Price * Quantity;
+    public decimal UnitPrice { get; private set; }
+    public decimal TotalPrice => UnitPrice * Quantity;
 }
