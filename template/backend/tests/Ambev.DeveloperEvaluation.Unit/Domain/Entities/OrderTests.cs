@@ -10,7 +10,8 @@ public class OrderTests
     public void AddItem_ShouldReturnError_WhenQuantityIsLessThanOrEqualToZero()
     {
         // Arrange
-        var order = new Order(Guid.NewGuid(), "Branch1");
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
         var product = new Product("Product1", 10);
 
         // Act
@@ -25,7 +26,8 @@ public class OrderTests
     public void AddItem_ShouldReturnError_WhenOrderHasMoreThan20ItemsOfSameProduct()
     {
         // Arrange
-        var order = new Order(Guid.NewGuid(), "Branch1");
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
         var product = new Product("Product1", 10);
         order.AddItem(product, 20);
 
@@ -41,7 +43,8 @@ public class OrderTests
     public void AddItem_ShouldAddItem_WhenValid()
     {
         // Arrange
-        var order = new Order(Guid.NewGuid(), "Branch1");
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
         var product = new Product("Product1", 10);
 
         // Act
@@ -55,7 +58,8 @@ public class OrderTests
     public void CalculateDiscount_ShouldAdd20PercentDiscount_WhenItemQuantitiesBetween10And20()
     {
         // Arrange
-        var order = new Order(Guid.NewGuid(), "Branch1");
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
         var product = new Product("Product1", 10);
         order.AddItem(product, 15);
 
@@ -71,7 +75,8 @@ public class OrderTests
     public void CalculateDiscount_ShouldAdd10PercentDiscount_WhenItemQuantitiesBetween4And9()
     {
         // Arrange
-        var order = new Order(Guid.NewGuid(), "Branch1");
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
         var product = new Product("Product1", 10);
         order.AddItem(product, 5);
 
@@ -87,7 +92,8 @@ public class OrderTests
     public void CalculateDiscount_ShouldNotAddDiscount_WhenItemQuantitiesLessThan4()
     {
         // Arrange
-        var order = new Order(Guid.NewGuid(), "Branch1");
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
         var product = new Product("Product1", 10);
         order.AddItem(product, 3);
 
@@ -102,7 +108,8 @@ public class OrderTests
     public void TotalWithDiscount_ShouldReturnCorrectTotal_WhenDiscountsApplied()
     {
         // Arrange
-        var order = new Order(Guid.NewGuid(), "Branch1");
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
         var product = new Product("Product1", 10);
         order.AddItem(product, 10);
         order.CalculateDiscount();
@@ -118,7 +125,8 @@ public class OrderTests
     public void Quantities_ShouldReturnCorrectTotalQuantity()
     {
         // Arrange
-        var order = new Order(Guid.NewGuid(), "Branch1");
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
         var product1 = new Product("Product1", 10);
         var product2 = new Product("Product2", 20);
         order.AddItem(product1, 5);
@@ -131,4 +139,3 @@ public class OrderTests
         Assert.Equal(8, quantities);
     }
 }
-
