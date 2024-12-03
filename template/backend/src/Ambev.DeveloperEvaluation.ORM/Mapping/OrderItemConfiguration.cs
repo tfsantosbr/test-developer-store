@@ -8,8 +8,9 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 {
     public void Configure(EntityTypeBuilder<OrderItem> builder)
     {
-        builder.ToTable("OrderItems").HasKey(o => new { o.OrderId, o.ProductId });
+        builder.ToTable("OrderItems").HasKey(o => o.Id);
 
+        builder.Property(o => o.Id).ValueGeneratedNever();
         builder.Property(o => o.OrderId).ValueGeneratedNever();
         builder.Property(o => o.ProductId).ValueGeneratedNever();
 

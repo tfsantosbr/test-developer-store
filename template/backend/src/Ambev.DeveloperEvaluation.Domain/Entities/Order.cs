@@ -24,6 +24,7 @@ public sealed class Order : BaseEntity
     public DateTime CreatedAt { get; private set; }
     public Guid UserId { get; private set; }
     public string Branch { get; private set; } = string.Empty;
+    public bool IsCanceled { get; private set; }
     public int Quantities => GetItemQuantities();
     public decimal Total => GetOrderTotal();
     public decimal TotalWithDiscount => GetOrderTotalWithDiscount();
@@ -44,6 +45,16 @@ public sealed class Order : BaseEntity
         };
 
         return order;
+    }
+
+    public void Update(string branch)
+    {
+        Branch = branch;
+    }
+
+    public void Cancel()
+    {
+        IsCanceled = true;
     }
 
     public void CalculateDiscount()
@@ -69,6 +80,20 @@ public sealed class Order : BaseEntity
 
         return Result.Success();
     }
+
+    public Result CancelItem(Guid itemId)
+    {
+        var item = _items.FirstOrDefault(item => item.Id == itemId);
+
+        if (item is null)
+            return Result.Error(OrderErrors.ItemNotFound(itemId));
+
+        _items.Remove(item);
+
+        return Result.Success();
+    }
+
+    public void ClearItems() => _items.Clear();
 
     // Private Methods
 

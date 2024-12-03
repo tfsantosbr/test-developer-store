@@ -9,4 +9,10 @@ public static class OrderErrors
 
     public static Error CantAddItemWithQuantityLessThanZero() =>
         new(nameof(CantAddItemWithQuantityLessThanZero), "Can't add item with quantity less than zero");
+
+    public static Error OrderNotFound(Guid orderId) =>
+        new(nameof(OrderNotFound), $"Order not found: '{orderId}'");
+
+    public static Error ItemNotFound(Guid itemId) =>
+        new(nameof(ItemNotFound), $"Item not found: '{itemId}'");
 }

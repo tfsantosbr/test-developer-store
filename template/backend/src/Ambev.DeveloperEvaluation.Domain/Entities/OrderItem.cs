@@ -1,9 +1,12 @@
-﻿namespace Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Common;
 
-public sealed class OrderItem
+namespace Ambev.DeveloperEvaluation.Domain.Entities;
+
+public sealed class OrderItem : BaseEntity
 {
     public OrderItem(Guid orderId, Product product, int quantity)
     {
+        Id = Guid.NewGuid();
         OrderId = orderId;
         ProductId = product.Id;
         UnitPrice = product.Price;

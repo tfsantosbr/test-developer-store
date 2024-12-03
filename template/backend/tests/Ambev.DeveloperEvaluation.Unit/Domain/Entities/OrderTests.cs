@@ -88,6 +88,25 @@ public class OrderTests
         Assert.Equal(10, order.Discounts.First().Percentage);
     }
 
+    [Fact(DisplayName = "CalculateDiscount should add 10% discount when the quantity of items is above 20")]
+    public void CalculateDiscount_ShouldAdd10PercentDiscount_WhenItemQuantitiesIsAbove20()
+    {
+        // Arrange
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
+        var product1 = new Product("Product1", 10);
+        var product2 = new Product("Product2", 10);
+        order.AddItem(product1, 20);
+        order.AddItem(product2, 1);
+
+        // Act
+        order.CalculateDiscount();
+
+        // Assert
+        Assert.Single(order.Discounts);
+        Assert.Equal(10, order.Discounts.First().Percentage);
+    }
+
     [Fact(DisplayName = "CalculateDiscount should not add discount when item quantities are less than 4")]
     public void CalculateDiscount_ShouldNotAddDiscount_WhenItemQuantitiesLessThan4()
     {
