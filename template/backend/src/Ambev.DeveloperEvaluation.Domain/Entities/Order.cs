@@ -1,11 +1,12 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Results;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Constants;
+using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Domain.ValueObjects;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
-public sealed class Order : BaseEntity
+public sealed class Order : AggregateRoot
 {
     // Fields
 
@@ -13,6 +14,17 @@ public sealed class Order : BaseEntity
     private readonly List<Discount> _discounts = [];
 
     // Constructors
+
+    private Order(User user, string branch)
+    {
+        Id = Guid.NewGuid();
+        Number = OrderNumber.Create();
+        CreatedAt = DateTime.UtcNow;
+        UserId = user.Id;
+        Branch = branch;
+
+        RaiseEvent(new OrderCreatedDomainEvent(Id));
+    }
 
     private Order()
     {
@@ -35,14 +47,7 @@ public sealed class Order : BaseEntity
 
     public static Order Create(User user, string branch)
     {
-        var order = new Order
-        {
-            Id = Guid.NewGuid(),
-            Number = OrderNumber.Create(),
-            CreatedAt = DateTime.UtcNow,
-            UserId = user.Id,
-            Branch = branch,
-        };
+        var order = new Order(user,branch);
 
         return order;
     }
@@ -50,11 +55,15 @@ public sealed class Order : BaseEntity
     public void Update(string branch)
     {
         Branch = branch;
+
+        RaiseEvent(new OrderModifiedDomainEvent(Id));
     }
 
     public void Cancel()
     {
         IsCanceled = true;
+
+        RaiseEvent(new OrderCanceledDomainEvent(Id));
     }
 
     public void CalculateDiscount()
@@ -89,6 +98,8 @@ public sealed class Order : BaseEntity
             return Result.Error(OrderErrors.ItemNotFound(itemId));
 
         _items.Remove(item);
+
+        RaiseEvent(new OrderItemCanceledDomainEvent(Id, itemId));
 
         return Result.Success();
     }

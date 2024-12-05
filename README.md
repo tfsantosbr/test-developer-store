@@ -24,7 +24,7 @@ You will need [.NET EF Tools](https://docs.microsoft.com/en-us/ef/core/cli/dotne
 
 ```bash
 # add migration
-dotnet ef migrations add <MIGRATION_NAME> -p src/Ambev.DeveloperEvaluation.ORM -s src/Ambev.DeveloperEvaluation.WebApi -o DefaultContext
+dotnet ef migrations add <MIGRATION_NAME> -p src/Ambev.DeveloperEvaluation.ORM -s src/Ambev.DeveloperEvaluation.WebApi -c DefaultContext
 
 # remove migration
 dotnet ef migrations remove -p src/Ambev.DeveloperEvaluation.ORM -c DefaultContext -s src/Ambev.DeveloperEvaluation.WebApi

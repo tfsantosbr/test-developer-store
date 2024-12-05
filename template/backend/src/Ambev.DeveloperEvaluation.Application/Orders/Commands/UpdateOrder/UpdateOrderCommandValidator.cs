@@ -13,7 +13,7 @@ public class UpdateOrderCommandValidator : AbstractValidator<UpdateOrderCommand>
     }
 }
 
-public class OrderItemValidator : AbstractValidator<OrderItem>
+public class OrderItemValidator : AbstractValidator<UpdateOrderCommandItem>
 {
     public OrderItemValidator()
     {

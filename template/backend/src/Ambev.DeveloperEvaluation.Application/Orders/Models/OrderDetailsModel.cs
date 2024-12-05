@@ -2,11 +2,12 @@
 
 namespace Ambev.DeveloperEvaluation.Application.Orders.Models;
 
-public record OrderDetailsModel(Guid UserId, string Branch, OrderItem[] Items, Discount[] Discounts)
+public record OrderDetailsModel(Guid Id, Guid UserId, string Branch, OrderItem[] Items, Discount[] Discounts)
 {
     public static OrderDetailsModel FromOrder(Order order)
     {
         var orderCreatedModel = new OrderDetailsModel(
+            order.Id,
             order.UserId, 
             order.Branch, 
             order.Items.Select(item => new OrderItem(

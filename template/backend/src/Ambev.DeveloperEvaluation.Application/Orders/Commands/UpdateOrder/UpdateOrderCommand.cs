@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Orders.Commands.UpdateOrder;
 
-public record UpdateOrderCommand(Guid OrderId, string Branch, OrderItem[] Items) : IRequest<Result>;
+public record UpdateOrderCommand(Guid OrderId, string Branch, UpdateOrderCommandItem[] Items) : IRequest<Result>;
 
-public record OrderItem(Guid ProductId, int Quantity);
+public record UpdateOrderCommandItem(Guid ProductId, int Quantity);

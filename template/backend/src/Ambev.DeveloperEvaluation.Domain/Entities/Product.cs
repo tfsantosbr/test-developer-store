@@ -4,9 +4,9 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
 public sealed class Product : BaseEntity
 {
-    public Product(string name, decimal price)
+    public Product(string name, decimal price, Guid? id = null)
     {
-        Id = Guid.NewGuid();
+        Id = id ?? Guid.NewGuid();
         Name = name;
         Price = price;
     }

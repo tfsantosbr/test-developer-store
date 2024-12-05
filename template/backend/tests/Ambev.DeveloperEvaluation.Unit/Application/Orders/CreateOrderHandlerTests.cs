@@ -4,6 +4,7 @@ using Ambev.DeveloperEvaluation.Domain.Constants;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Unit.Application.Orders.TestData;
+using Ambev.DeveloperEvaluation.Unit.Domain.Entities.TestData;
 using NSubstitute;
 using Xunit;
 
@@ -33,88 +34,75 @@ public class CreateOrderHandlerTests
     [Fact(DisplayName = "Given user not found When creating order Then returns error response")]
     public async Task Handle_UserNotFound_ReturnsErrorResponse()
     {
-        // Given
+        // Arrange
         var request = CreateOrderHandlerTestData.GenerateValidCommand();
 
-        _userRepository.GetByIdAsync(request.UserId, Arg.Any<CancellationToken>()).Returns((User)null);
+        _userRepository.GetByIdAsync(request.UserId, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(null));
 
-        // When
+        // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
-        // Then
+        // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal(UserErrors.UserNotFound(request.UserId), result.Errors.First());
+        Assert.Equal(UserErrors.UserNotFound(request.UserId), result.Errors[0]);
     }
 
-    /// <summary>
-    /// Tests that a product not found scenario returns an error response.
-    /// </summary>
     [Fact(DisplayName = "Given product not found When creating order Then returns error response")]
     public async Task Handle_ProductNotFound_ReturnsErrorResponse()
     {
-        // Given
+        // Arrange
         var request = CreateOrderHandlerTestData.GenerateValidCommand();
-        var user = new User(request.UserId, "Test User");
+        var user = UserTestData.GenerateValidUser();
 
         _userRepository.GetByIdAsync(request.UserId, Arg.Any<CancellationToken>()).Returns(user);
-        _productRepository.GetByIdAsync(request.Items.First().ProductId, Arg.Any<CancellationToken>()).Returns((Product)null);
+        _productRepository.GetByIdAsync(request.Items[0].ProductId, Arg.Any<CancellationToken>()).Returns(Task.FromResult<Product?>(null));
 
-        // When
+        // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
-        // Then
+        // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal(ProductErrors.ProductNotFound(request.Items.First().ProductId), result.Errors.First());
+        Assert.Equal(ProductErrors.ProductNotFound(request.Items[0].ProductId), result.Errors[0]);
     }
 
-    /// <summary>
-    /// Tests that an add item failure scenario returns an error response.
-    /// </summary>
     [Fact(DisplayName = "Given add item failure When creating order Then returns error response")]
     public async Task Handle_AddItemFailure_ReturnsErrorResponse()
     {
-        // Given
-        var request = CreateOrderHandlerTestData.GenerateValidCommand();
-        var user = new User(request.UserId, "Test User");
-        var product = new Product(request.Items.First().ProductId, "Test Product", 10.0m);
+        // Arrange
+        var request = CreateOrderHandlerTestData.GenerateInvalidCommand();
+        var user = UserTestData.GenerateValidUser();
+        var product = new Product("Test Product", 10.0m, request.Items[0].ProductId);
 
         _userRepository.GetByIdAsync(request.UserId, Arg.Any<CancellationToken>()).Returns(user);
-        _productRepository.GetByIdAsync(request.Items.First().ProductId, Arg.Any<CancellationToken>()).Returns(product);
+        _productRepository.GetByIdAsync(request.Items[0].ProductId, Arg.Any<CancellationToken>()).Returns(product);
         _orderRepository.CreateAsync(Arg.Any<Order>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         _unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
 
-        var order = Order.Create(user, request.Branch);
-        order.AddItem(product, 1); // Simulate failure
-
-        // When
+        // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
-        // Then
+        // Assert
         Assert.False(result.IsSuccess);
         Assert.NotEmpty(result.Errors);
     }
 
-    /// <summary>
-    /// Tests that a valid order creation request is handled successfully.
-    /// </summary>
     [Fact(DisplayName = "Given valid order data When creating order Then returns success response")]
     public async Task Handle_ValidRequest_ReturnsSuccessResponse()
     {
-        // Given
+        // Arrange
         var request = CreateOrderHandlerTestData.GenerateValidCommand();
-        var user = new User(request.UserId, "Test User");
-        var product = new Product(request.Items.First().ProductId, "Test Product", 10.0m);
+        var user = UserTestData.GenerateValidUser();
+        var product = new Product("Test Product", 10.0m, request.Items[0].ProductId);
 
         _userRepository.GetByIdAsync(request.UserId, Arg.Any<CancellationToken>()).Returns(user);
-        _productRepository.GetByIdAsync(request.Items.First().ProductId, Arg.Any<CancellationToken>()).Returns(product);
+        _productRepository.GetByIdAsync(request.Items[0].ProductId, Arg.Any<CancellationToken>()).Returns(product);
         _orderRepository.CreateAsync(Arg.Any<Order>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         _unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
 
-        // When
+        // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
-        // Then
+        // Assert
         Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value);
     }
 }

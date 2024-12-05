@@ -5,6 +5,6 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Orders.Commands.CreateOrder;
 
-public record CreateOrderCommand(Guid UserId, string Branch, OrderItem[] Items) : IRequest<Result<OrderDetailsModel>>;
+public record CreateOrderCommand(Guid UserId, string Branch, CreateOrderCommandItem[] Items) : IRequest<Result<OrderDetailsModel>>;
 
-public record OrderItem(Guid ProductId, int Quantity);
+public record CreateOrderCommandItem(Guid ProductId, int Quantity);

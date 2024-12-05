@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Ambev.DeveloperEvaluation.ORM.Migrations
 {
     /// <inheritdoc />
-    public partial class AddOrderTables : Migration
+    public partial class AddOrdersTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,6 +32,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Branch = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    IsCanceled = table.Column<bool>(type: "boolean", nullable: false),
                     Number = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -81,6 +82,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                 name: "OrderItems",
                 columns: table => new
                 {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     OrderId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
@@ -89,7 +91,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItems", x => new { x.OrderId, x.ProductId });
+                    table.PrimaryKey("PK_OrderItems", x => x.Id);
                     table.ForeignKey(
                         name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,
@@ -112,6 +114,11 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Discounts_OrderId",
                 table: "Discounts",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
