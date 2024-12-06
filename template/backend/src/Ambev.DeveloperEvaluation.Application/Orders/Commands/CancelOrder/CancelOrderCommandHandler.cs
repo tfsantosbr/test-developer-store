@@ -17,7 +17,10 @@ public class CancelOrderCommandHandler(IUnitOfWork unitOfWork, IOrderRepository 
         if (order is null)
             return Result.NotFound(OrderErrors.OrderNotFound(request.OrderId));
 
-        order.Cancel();
+        var result = order.Cancel();
+
+        if (result.IsFailure)
+            return result;
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

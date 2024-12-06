@@ -140,6 +140,87 @@ public class OrderTests
         Assert.Equal(80, totalWithDiscount); // 10 items * $10 each - 20% discount
     }
 
+    [Fact(DisplayName = "Cancel should return error when order is already canceled")]
+    public void Cancel_ShouldReturnError_WhenOrderIsAlreadyCanceled()
+    {
+        // Arrange
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
+        order.Cancel();
+
+        // Act
+        var result = order.Cancel();
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Contains(OrderErrors.OrderIsAlreadyCanceled(order.Id), result.Errors);
+    }
+
+    [Fact(DisplayName = "Cancel should succeed when order is not already canceled")]
+    public void Cancel_ShouldSucceed_WhenOrderIsNotAlreadyCanceled()
+    {
+        // Arrange
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
+
+        // Act
+        var result = order.Cancel();
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.True(order.IsCanceled);
+    }
+
+    [Fact(DisplayName = "CancelItem should return error when item is not found")]
+    public void CancelItem_ShouldReturnError_WhenItemIsNotFound()
+    {
+        // Arrange
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
+
+        // Act
+        var itemId = Guid.NewGuid();
+        var result = order.CancelItem(itemId);
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Contains(OrderErrors.ItemNotFound(itemId), result.Errors);
+    }
+
+    [Fact(DisplayName = "CancelItem should succeed when item is found")]
+    public void CancelItem_ShouldSucceed_WhenItemIsFound()
+    {
+        // Arrange
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
+        var product = new Product("Product1", 10);
+        order.AddItem(product, 5);
+        var itemId = order.Items.First().Id;
+
+        // Act
+        var result = order.CancelItem(itemId);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.DoesNotContain(order.Items, item => item.Id == itemId);
+    }
+
+    [Fact(DisplayName = "ClearItems should remove all items from the order")]
+    public void ClearItems_ShouldRemoveAllItemsFromOrder()
+    {
+        // Arrange
+        var user = new User { Id = Guid.NewGuid(), Username = "User1" };
+        var order = Order.Create(user, "Branch1");
+        var product = new Product("Product1", 10);
+        order.AddItem(product, 5);
+
+        // Act
+        order.ClearItems();
+
+        // Assert
+        Assert.Empty(order.Items);
+    }
+
     [Fact(DisplayName = "Quantities should return correct total quantity")]
     public void Quantities_ShouldReturnCorrectTotalQuantity()
     {

@@ -59,15 +59,22 @@ public sealed class Order : AggregateRoot
         RaiseEvent(new OrderModifiedDomainEvent(Id));
     }
 
-    public void Cancel()
+    public Result Cancel()
     {
+        if (IsCanceled)
+            return Result.Error(OrderErrors.OrderIsAlreadyCanceled(Id));
+
         IsCanceled = true;
 
         RaiseEvent(new OrderCanceledDomainEvent(Id));
+
+        return Result.Success();
     }
 
     public void CalculateDiscount()
     {
+        _discounts.Clear();
+
         var itemQuantities = GetItemQuantities();
 
         if (itemQuantities >= 10 && itemQuantities <= 20)
@@ -98,6 +105,8 @@ public sealed class Order : AggregateRoot
             return Result.Error(OrderErrors.ItemNotFound(itemId));
 
         _items.Remove(item);
+
+        CalculateDiscount();
 
         RaiseEvent(new OrderItemCanceledDomainEvent(Id, itemId));
 

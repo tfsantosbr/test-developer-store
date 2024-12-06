@@ -14,6 +14,9 @@ public class OrderRepository(IDefaultContext context) : IOrderRepository
 
     public async Task<Order?> GetByIdAsync(Guid orderId, CancellationToken cancellationToken = default)
     {
-        return await context.Orders.FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
+        return await context.Orders
+            .Include(o=>o.Items)
+            .Include(o => o.Discounts)
+            .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
     }
 }

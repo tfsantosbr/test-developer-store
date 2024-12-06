@@ -2,11 +2,11 @@
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Orders.Requests;
 
-public record UpdateOrderRequest(Guid UserId, string Branch, UpdateOrderRequestItem[] Items)
+public record UpdateOrderRequest(string Branch, UpdateOrderRequestItem[] Items)
 {
-    public UpdateOrderCommand ToCommand() =>
+    public UpdateOrderCommand ToCommand(Guid orderId) =>
         new(
-            UserId,
+            orderId,
             Branch,
             Items.Select(i =>
                 new UpdateOrderCommandItem(i.ProductId, i.Quantity)

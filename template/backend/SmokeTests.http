@@ -1,0 +1,54 @@
+@baseUrl = https://localhost:7181
+@orderId = 75ea841c-2beb-49fb-aabb-94de6a420462
+
+### Criação de Pedido
+POST {{baseUrl}}/orders
+Content-Type: application/json
+
+{
+  "userId": "5da91f12-e38b-430c-8202-61c24c263f91",
+  "branch": "Branch1",
+  "items": [
+    {
+      "productId": "64846d8c-1271-4fc3-b488-af13acf36a53",
+      "quantity": 2
+    },
+    {
+      "productId": "23291fc1-f094-4583-a58d-6524552136a5",
+      "quantity": 1
+    },
+    {
+      "productId": "1ca4bce0-7c79-4804-aa31-9dbc5304aff7",
+      "quantity": 1
+    }
+  ]
+}
+
+### Listar Pedidos
+GET {{baseUrl}}/orders
+
+### Detalhes do Pedido
+GET {{baseUrl}}/orders/{{orderId}}
+
+### Modificação do Pedido
+PUT {{baseUrl}}/orders/{{orderId}}
+Content-Type: application/json
+{
+  "branch": "Branch2",
+  "items": [
+    {
+      "productId": "64846d8c-1271-4fc3-b488-af13acf36a53",
+      "quantity": 10
+    },
+    {
+      "productId": "1ca4bce0-7c79-4804-aa31-9dbc5304aff7",
+      "quantity": 5
+    }
+  ]
+}
+
+### Cancelamento do Item do Pedido
+DELETE {{baseUrl}}/orders/{{orderId}}/items/9b5baa2a-e17a-48df-909a-628edb5acf03
+
+### Cancelamento do Pedido
+DELETE {{baseUrl}}/orders/{{orderId}}

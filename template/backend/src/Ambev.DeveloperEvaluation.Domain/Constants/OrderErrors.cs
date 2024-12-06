@@ -15,4 +15,7 @@ public static class OrderErrors
 
     public static Error ItemNotFound(Guid itemId) =>
         new(nameof(ItemNotFound), $"Item not found: '{itemId}'");
+
+    public static Error OrderIsAlreadyCanceled(Guid orderId) =>
+        new(nameof(OrderIsAlreadyCanceled), $"Order is already canceled: '{orderId}'");
 }

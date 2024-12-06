@@ -35,3 +35,15 @@ dotnet ef database update -p src/Ambev.DeveloperEvaluation.ORM -c DefaultContext
 # generate scripts for manual database update
 dotnet ef migrations script -p src/Ambev.DeveloperEvaluation.ORM -c DefaultContext -s src/Ambev.DeveloperEvaluation.WebApi -o ./scripts/migrations.sql
 ```
+
+## Running Tests
+
+You will need [.NET CLI](https://dotnet.microsoft.com/en-us/download) to run this commands
+
+```bash
+dotnet test
+```
+
+# Smoke Tests
+
+The smoke test can be found in [SmokeTests.http](./template/backend/SmokeTests.http) file.

@@ -2,7 +2,7 @@
 
 namespace Ambev.DeveloperEvaluation.Application.Orders.Models;
 
-public record OrderDetailsModel(Guid Id, Guid UserId, string Branch, OrderItem[] Items, Discount[] Discounts)
+public record OrderDetailsModel(Guid Id, Guid UserId, string Branch, OrderItem[] Items, Discount[] Discounts, bool IsCanceled)
 {
     public static OrderDetailsModel FromOrder(Order order)
     {
@@ -11,6 +11,7 @@ public record OrderDetailsModel(Guid Id, Guid UserId, string Branch, OrderItem[]
             order.UserId, 
             order.Branch, 
             order.Items.Select(item => new OrderItem(
+                item.Id,
                 item.ProductId, 
                 item.Quantity, 
                 item.UnitPrice, 
@@ -18,13 +19,14 @@ public record OrderDetailsModel(Guid Id, Guid UserId, string Branch, OrderItem[]
             ).ToArray(), 
             order.Discounts.Select(discount => 
                 new Discount(discount.Percentage)
-            ).ToArray()
+            ).ToArray(),
+            order.IsCanceled
         );
 
         return orderCreatedModel;
     }
 }
 
-public record OrderItem(Guid ProductId, int Quantity, decimal UnitPrice, decimal TotalPrice);
+public record OrderItem(Guid Id, Guid ProductId, int Quantity, decimal UnitPrice, decimal TotalPrice);
 
 public record Discount(int Percentage);

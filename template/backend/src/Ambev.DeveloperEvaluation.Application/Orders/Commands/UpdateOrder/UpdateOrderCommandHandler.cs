@@ -35,6 +35,8 @@ public class UpdateOrderCommandHandler(
                 return Result<OrderDetailsModel>.Error(addItemResult.Errors);
         }
 
+        order.CalculateDiscount();
+
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

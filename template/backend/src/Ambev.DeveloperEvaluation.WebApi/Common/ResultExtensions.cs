@@ -20,19 +20,29 @@ public static class ResultExtensions
 
     // Private Methods
 
-    private static IResult BaseResult(Result result, IResult successResult) =>
-        result switch
-        {
-            NotFoundResult => TypedResults.NotFound(result.Errors),
-            ErrorResult => TypedResults.BadRequest(result.Errors),
-            _ => successResult,
-        };
+    private static IResult BaseResult(Result result, IResult successResult)
+    {
+        if (result.IsSuccess)
+            return successResult;
 
-    private static IResult BaseResult<TValue>(Result<TValue> result, IResult successResult) =>
-        result switch
+        return result.Type switch
         {
-            NotFoundResult<TValue> => TypedResults.NotFound(result.Errors),
-            ErrorResult<TValue> => TypedResults.BadRequest(result.Errors),
-            _ => successResult,
+            ResultType.NotFound => TypedResults.NotFound(result.Errors),
+            ResultType.Error => TypedResults.BadRequest(result.Errors),
+            _ => throw new InvalidOperationException(),
         };
+    }
+
+    private static IResult BaseResult<TValue>(Result<TValue> result, IResult successResult)
+    {
+        if (result.IsSuccess)
+            return successResult;
+
+        return result.Type switch
+        {
+            ResultType.NotFound => TypedResults.NotFound(result.Errors),
+            ResultType.Error => TypedResults.BadRequest(result.Errors),
+            _ => throw new InvalidOperationException(),
+        };
+    }
 }

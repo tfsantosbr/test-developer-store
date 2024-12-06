@@ -6,19 +6,23 @@ public record Result
     {
     }
 
-    protected Result(Error notification) =>
-        Errors = [notification];
+    protected Result(Error error, ResultType? type = null)
+    {
+        Errors = [error];
+        Type = type ?? ResultType.Error;
+    }
 
-    protected Result(Error[] notifications) =>
-        Errors = notifications;
+    protected Result(Error[] errors) =>
+        Errors = errors;
 
     public Error[] Errors { get; } = [];
+    public ResultType Type { get; }
     public bool IsSuccess => Errors.Length == 0;
     public bool IsFailure => !IsSuccess;
 
-    public static ErrorResult Error(Error notification) => new(notification);
-    public static ErrorResult Error(Error[] notifications) => new(notifications);
-    public static NotFoundResult NotFound(Error notification) => new(notification);
+    public static Result Error(Error error) => new(error);
+    public static Result Error(Error[] errors) => new(errors);
+    public static Result NotFound(Error error) => new(error, ResultType.NotFound);
     public static Result Success() => new();
     public static Result<TData> Success<TData>(TData data) => new(data);
 }
@@ -32,18 +36,24 @@ public record Result<TData> : Result
         Data = data;
     }
 
-    internal Result(Error notification)
-        : base(notification)
+    internal Result(Error error, ResultType? type = null)
+        : base(error, type)
     {
     }
 
-    internal Result(Error[] notifications)
-        : base(notifications)
+    internal Result(Error[] errors)
+        : base(errors)
     {
     }
 
-    public static new ErrorResult<TData> Error(Error notification) => new(notification);
-    public static new ErrorResult<TData> Error(Error[] notifications) => new(notifications);
-    public static new NotFoundResult<TData> NotFound(Error notification) => new(notification);
+    public static new Result<TData> Error(Error error) => new(error);
+    public static new Result<TData> Error(Error[] errors) => new(errors);
+    public static new Result<TData> NotFound(Error error) => new(error, ResultType.NotFound);
     public static Result<TData> Success(TData data) => new(data);
+}
+
+public enum ResultType
+{
+    Error,
+    NotFound,
 }

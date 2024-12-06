@@ -34,6 +34,8 @@ public class CreateOrderCommandHandler(
                 return Result<OrderDetailsModel>.Error(addItemResult.Errors);
         }
 
+        order.CalculateDiscount();
+
         await orderRepository.CreateAsync(order, cancellationToken);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

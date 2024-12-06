@@ -86,7 +86,7 @@ public static class OrdersEndpoints
         IMediator mediator,
         CancellationToken cancellationToken = default)
     {
-        var command = request.ToCommand();
+        var command = request.ToCommand(orderId);
 
         var result = await mediator.Send(command, cancellationToken);
 
