@@ -1,5 +1,5 @@
 @baseUrl = https://localhost:7181
-@orderId = 75ea841c-2beb-49fb-aabb-94de6a420462
+
 
 ### Criação de Pedido
 POST {{baseUrl}}/orders
@@ -28,6 +28,7 @@ Content-Type: application/json
 GET {{baseUrl}}/orders
 
 ### Detalhes do Pedido
+@orderId = 7cbeeb56-6b47-4000-9084-6599cf18a423
 GET {{baseUrl}}/orders/{{orderId}}
 
 ### Modificação do Pedido
@@ -48,7 +49,8 @@ Content-Type: application/json
 }
 
 ### Cancelamento do Item do Pedido
-DELETE {{baseUrl}}/orders/{{orderId}}/items/9b5baa2a-e17a-48df-909a-628edb5acf03
+@itemId = d736dc84-5205-460b-a26e-503d4348874f
+DELETE {{baseUrl}}/orders/{{orderId}}/items/{{itemId}}
 
 ### Cancelamento do Pedido
 DELETE {{baseUrl}}/orders/{{orderId}}
