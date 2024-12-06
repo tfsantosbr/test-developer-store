@@ -6,6 +6,7 @@ using Ambev.DeveloperEvaluation.Common.Logging;
 using Ambev.DeveloperEvaluation.Common.Persistence;
 using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Common.Validation;
+using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.IoC;
 using Ambev.DeveloperEvaluation.ORM;
@@ -36,7 +37,11 @@ builder.Services.AddDbContext<IDefaultContext, DefaultContext>(options =>
     )
 );
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateOrderCommand>());
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblyContaining<CreateOrderCommand>();
+    cfg.RegisterServicesFromAssemblyContaining<OrderCreatedDomainEvent>();
+});
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 

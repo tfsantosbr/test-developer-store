@@ -1,4 +1,5 @@
-@baseUrl = https://localhost:7181
+#@baseUrl = https://localhost:7181
+@baseUrl = http://localhost:8080
 
 
 ### Criação de Pedido
@@ -28,7 +29,7 @@ Content-Type: application/json
 GET {{baseUrl}}/orders
 
 ### Detalhes do Pedido
-@orderId = 7cbeeb56-6b47-4000-9084-6599cf18a423
+@orderId = 1214734e-17f9-40a9-83be-ab4772cf67f0
 GET {{baseUrl}}/orders/{{orderId}}
 
 ### Modificação do Pedido
@@ -49,7 +50,7 @@ Content-Type: application/json
 }
 
 ### Cancelamento do Item do Pedido
-@itemId = d736dc84-5205-460b-a26e-503d4348874f
+@itemId = 1c63f927-b007-42c3-a437-ef67c818a331
 DELETE {{baseUrl}}/orders/{{orderId}}/items/{{itemId}}
 
 ### Cancelamento do Pedido
