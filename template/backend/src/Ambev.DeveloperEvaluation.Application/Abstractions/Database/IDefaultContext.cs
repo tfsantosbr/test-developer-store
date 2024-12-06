@@ -7,4 +7,5 @@ public interface IDefaultContext
 {
     DbSet<User> Users { get; }
     DbSet<Order> Orders { get; }
+    DbSet<Product> Products { get; }
 }

@@ -12,6 +12,7 @@ public class DefaultContext(IPublisher publisher, DbContextOptions<DefaultContex
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Order> Orders => Set<Order>();
+    public DbSet<Product> Products => Set<Product>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
